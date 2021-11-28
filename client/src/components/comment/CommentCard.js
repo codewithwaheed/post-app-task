@@ -10,7 +10,9 @@ export default function CommentCard({
   commentData,
   userId,
   postId,
+  name,
 }) {
+  console.log(name);
   // state
   const [edit, setEdit] = useState(false);
   const [editedInput, setEditedInput] = useState(message || "");
@@ -68,7 +70,7 @@ export default function CommentCard({
       />
       <div className="message">
         <div className="flexBetweenCenter">
-          <h3>Patrick Shuf</h3>
+          <h3>{name}</h3>
           <p>{formatDistance(new Date(), parseISO(createdAt))} ago</p>
         </div>
         <h5>Professional-Student</h5>

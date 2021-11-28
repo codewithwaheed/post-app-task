@@ -134,6 +134,7 @@
 .post .profile h3 {
   font: 18px poppinsSb;
   margin: 0;
+  text-transform: capitalize;
 }
 .post .profile .flexCenter img {
   width: 10px;
@@ -255,6 +256,7 @@
 .comment .commentSec h3 {
   font: 14px poppinsSb;
   margin: 0;
+  text-transform: capitalize;
 }
 .comment .commentSec p {
   font: 10px poppinsBd;

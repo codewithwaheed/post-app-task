@@ -7,6 +7,7 @@ export default function CommentView({
   userId,
   updatePost,
   postId,
+  name,
 }) {
   // state
   const [comment, setComment] = useState("");
@@ -56,6 +57,7 @@ export default function CommentView({
               userId={userId}
               postId={postId}
               commentData={commentData}
+              name={name}
             />
           );
         })}

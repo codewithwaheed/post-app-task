@@ -9,12 +9,17 @@ export default function PostCard({
   comment,
   createdAt,
   userId,
+  userData,
   _id,
 }) {
   // show comment state to render comment sec
   const [showComments, setShowComments] = useState(false);
   // is post liked
   const isLiked = like.includes(userId);
+
+  // user name
+  const { firstName, lastName } = userData;
+  const name = `${firstName} ${lastName}`;
 
   // mutaion hook for update post
   const updatePost = useUpdateQueryItem(["posts", userId], updatePostById);
@@ -41,7 +46,7 @@ export default function PostCard({
               className="cover"
             ></img>
             <div className="right">
-              <h3>Patrick Shuff</h3>
+              <h3>{name}</h3>
               <div className="flexCenter">
                 <img src="/assets/images/marker.svg"></img>
                 <span>OH , USA</span>
@@ -89,6 +94,7 @@ export default function PostCard({
           userId={userId}
           updatePost={updatePost}
           postId={_id}
+          name={name}
         />
       </div>
     </div>
