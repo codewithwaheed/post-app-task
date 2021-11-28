@@ -20,11 +20,13 @@ export default function AddPost() {
     const postData = {
       _id: Math.floor(Math.random() * 100),
       title: message,
-      user: userId,
       content: "",
       createdAt: new Date().toISOString(),
       like: [],
       comment: [],
+      // dummy user data
+      user: userId,
+      userData: { firstName: "Waheed", lastName: "Ahmad" },
     };
     addPostFun.mutate(postData);
     setMessage("");
