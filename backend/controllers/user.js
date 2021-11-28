@@ -1,7 +1,5 @@
 const UserModel = require("../models/user");
-const postModel = require("../models/post");
-const { Mongoose } = require("mongoose");
-const ObjectId = require("mongodb").ObjectID;
+const services = require("../services");
 
 // @req : POST
 // @description : adding user
@@ -18,13 +16,13 @@ exports.addUser = async (req, res, next) => {
         message: "User already exist !",
       });
     } else {
-      const newUser = new UserModel({
+      const userData = {
         email: email.toString().toLowerCase(),
         username,
         firstName,
         lastName,
-      });
-      await newUser.save();
+      };
+      const newUser = await services.user.addNewUser(userData);
       res.status(200).json({ success: true, data: newUser });
     }
   } catch (error) {
@@ -39,7 +37,7 @@ exports.addUser = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
-    const user = await UserModel.findById(userId);
+    const user = await services.user.getUserById(userId);
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -53,9 +51,7 @@ exports.getUserById = async (req, res, next) => {
 exports.updateUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
-    const user = await UserModel.findByIdAndUpdate(userId, {
-      $set: { ...req.body },
-    });
+    await services.user.updateUserById(userId, req.body);
     res.status(200).json({ success: true });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -68,32 +64,8 @@ exports.updateUserById = async (req, res, next) => {
 
 exports.getPostByUserId = async (req, res, next) => {
   const { userId } = req.params;
-
-  const aggregateArr = [
-    { $match: { user: ObjectId(userId) } },
-    {
-      $lookup: {
-        from: "users",
-        localField: "user",
-        foreignField: "_id",
-        as: "userData",
-      },
-    },
-
-    {
-      $unwind: {
-        path: "$userData",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $sort: {
-        createdAt: -1,
-      },
-    },
-  ];
   try {
-    const allPosts = await postModel.aggregate(aggregateArr);
+    const allPosts = await services.user.getPostByUserId(userId);
     res.status(200).json({ success: true, data: allPosts });
   } catch (error) {
     res.status(400).json({ message: error.message });

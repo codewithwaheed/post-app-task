@@ -1,4 +1,4 @@
-const postModel = require("../models/post");
+const services = require("../services");
 
 // @req : POST
 // @description : adding post
@@ -12,12 +12,12 @@ exports.addPost = async (req, res, next) => {
       .json({ message: "Please provide all required fields" });
   }
   try {
-    const newPost = new postModel({
+    const postData = {
       title,
       content,
       user,
-    });
-    await newPost.save();
+    };
+    const newPost = await services.post.addNewPost(postData);
     res.status(200).json({ success: true, data: newPost });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -31,7 +31,7 @@ exports.addPost = async (req, res, next) => {
 exports.getPostById = async (req, res, next) => {
   const { postId } = req.params;
   try {
-    const post = await postModel.findById(postId).lean();
+    const post = await services.post.getPostById(postId);
     res.status(200).json({ success: true, data: post });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -45,11 +45,7 @@ exports.getPostById = async (req, res, next) => {
 exports.updatePostById = async (req, res, next) => {
   const { postId } = req.params;
   try {
-    const post = await postModel
-      .findByIdAndUpdate(postId, {
-        $set: { ...req.body },
-      })
-      .lean();
+    await services.post.updatePostById(postId, req.body);
     res.status(200).json({ success: true });
   } catch (error) {
     res.status(400).json({ message: error.message });
